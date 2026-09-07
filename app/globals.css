@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-spin-slow: spin-slow 12s linear infinite;
+  --animate-bounce-slow: bounce-slow 3s infinite ease-in-out;
+  --animate-fade-in-up: fade-in-up 0.6s ease-out forwards;
+
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes bounce-slow {
+    0%,
+    100% {
+      transform: translateY(-3%);
+    }
+    50% {
+      transform: translateY(3%);
+    }
+  }
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
