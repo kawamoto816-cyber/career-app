@@ -894,6 +894,15 @@ const MatchingResultScreen = ({ matchedUniversities, onBack }) => {
               </div>
             </div>
           ))}
+
+          {/* スタディサプリ高校・大学講座 広告 (ValueCommerce) */}
+          <div className="pt-2 flex flex-col items-center">
+            <span className="text-[10px] font-bold text-gray-400 tracking-wider mb-1">PR</span>
+            <a href="//ck.jp.ap.valuecommerce.com/servlet/referral?sid=3759766&pid=892700092" rel="nofollow noopener" target="_blank">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="//ad.jp.ap.valuecommerce.com/servlet/gifbanner?sid=3759766&pid=892700092" width="300" height="250" alt="スタディサプリ高校・大学講座" className="rounded-xl shadow-sm border border-gray-100" />
+            </a>
+          </div>
         </div>
         <div className="p-4 bg-white border-t border-gray-100 shrink-0 shadow-lg z-10 space-y-3">
           
