@@ -845,6 +845,23 @@ const ResultScreen = ({ result, mbtiBonus, onMatchStart, onExplain, onRetry, all
               <button onClick={onExplain} className="flex-1 bg-white text-indigo-500 font-bold py-3 rounded-xl border-2 border-indigo-100 flex items-center justify-center gap-2 hover:bg-indigo-50 transition text-sm"><Info size={16} /> 軸の解説</button>
             </div>
             <button onClick={onRetry} className="w-full text-gray-400 font-bold py-2 text-xs hover:text-gray-600 flex items-center justify-center gap-1"><RefreshCw size={12} /> 最初からやり直す</button>
+
+            {/* アオハルOSへの導線: 進路が決まった後のES・面接対策への橋渡し */}
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-5 rounded-2xl border border-indigo-100 shadow-sm text-center">
+              <p className="text-[10px] font-bold text-indigo-400 tracking-wider mb-1">NEXT STEP</p>
+              <p className="text-sm font-bold text-gray-800 mb-3 leading-relaxed">
+                進路が決まったら、次はES・面接対策へ。<br />
+                アオハルOSのAI群が本番まで伴走します。
+              </p>
+              <a
+                href="https://app.bluespring.co.jp/#apps"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1 bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl shadow-md hover:bg-indigo-500 transition text-sm"
+              >
+                アオハルOSでES・面接対策を見る →
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -960,6 +977,22 @@ const MatchingResultScreen = ({ matchedUniversities, onBack }) => {
             )}
           </div>
           {/* ▲ 追加ここまで */}
+
+          {/* アオハルOSへの導線: 進路が決まった後のES・面接対策への橋渡し */}
+          <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-2xl border border-indigo-100 shadow-sm text-center">
+            <p className="text-[10px] font-bold text-indigo-400 tracking-wider mb-1">NEXT STEP</p>
+            <p className="text-xs font-bold text-gray-800 mb-2 leading-relaxed">
+              進路が決まったら、次はES・面接対策へ。
+            </p>
+            <a
+              href="https://app.bluespring.co.jp/#apps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1 bg-indigo-600 text-white font-bold py-2.5 px-5 rounded-xl shadow-md hover:bg-indigo-500 transition text-xs"
+            >
+              アオハルOSでES・面接対策を見る →
+            </a>
+          </div>
 
           <button onClick={onBack} className="w-full font-bold py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transform transition active:scale-95 bg-gray-800 text-white hover:bg-gray-900">
             診断結果に戻る
