@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: path.join(__dirname),
+  // OGP画像 (/r/[id]/opengraph-image) が実行時に読むフォントとキャラ画像を、
+  // Vercel のサーバーレス関数のバンドルに含める。
+  outputFileTracingIncludes: {
+    "/r/[id]/opengraph-image": ["./lib/fonts/**", "./public/images/**"],
   },
 };
 

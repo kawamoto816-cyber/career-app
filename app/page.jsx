@@ -10,6 +10,16 @@ const APP_TITLE = "キャリキャラ";
 // 重要：GASのデプロイURL
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzT9e260MXOA9oyW8x-LVQF3byu93noJtw2U8rZMdS7jwBZ8sb7OHA2pym8CuhhDTKhsA/exec";
 
+// シェア用の結果ページURL (OGP画像付き)。SNSに貼るとキャラのカードが出る。
+const SHARE_BASE = "https://career.bluespring.co.jp/r/";
+const shareUrlFor = (result) => `${SHARE_BASE}${result.typeIdString}`;
+const shareTextFor = (result) => `私の進路キャラは【${result.name}】（${result.typeIdString}型）でした！\n"${result.catchphrase}"\n#キャリキャラ #進路キャラ診断\n${shareUrlFor(result)}`;
+
+// GA4 (アオハルOS共通プロパティ)。gtag 未読込でも落ちないようにガードする。
+const track = (event, params) => {
+  try { if (typeof window !== 'undefined' && typeof window.gtag === 'function') window.gtag('event', event, params); } catch {}
+};
+
 // --- データ定義 ---
 const universityDatabase = {
   science: [
@@ -805,8 +815,8 @@ const ResultScreen = ({ result, mbtiBonus, onMatchStart, onExplain, onRetry, all
                     <button 
                       className="w-full flex items-center gap-2 p-3 hover:bg-gray-50 rounded-lg transition text-left text-sm font-bold text-gray-700"
                       onClick={() => {
-                        const text = `私の進路キャラは【${result.name}】でした！\n#キャリキャラ #進路とかムリゲー診断`;
-                        const url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(text);
+                        track('share', { method: 'x', content_type: 'chara_result', item_id: result.typeIdString });
+                        const url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareTextFor(result));
                         window.open(url, '_blank');
                         setShowShareMenu(false);
                       }}
@@ -816,8 +826,8 @@ const ResultScreen = ({ result, mbtiBonus, onMatchStart, onExplain, onRetry, all
                     <button 
                       className="w-full flex items-center gap-2 p-3 hover:bg-gray-50 rounded-lg transition text-left text-sm font-bold text-gray-700"
                       onClick={() => {
-                        const text = `私の進路キャラは【${result.name}】でした！\n#キャリキャラ #進路とかムリゲー診断`;
-                        const url = "https://line.me/R/msg/text/?" + encodeURIComponent(text);
+                        track('share', { method: 'line', content_type: 'chara_result', item_id: result.typeIdString });
+                        const url = "https://line.me/R/msg/text/?" + encodeURIComponent(shareTextFor(result));
                         window.open(url, '_blank');
                         setShowShareMenu(false);
                       }}
@@ -825,10 +835,21 @@ const ResultScreen = ({ result, mbtiBonus, onMatchStart, onExplain, onRetry, all
                       <LineIcon size={16} className="text-green-500" /> LINEで送る
                     </button>
                     <button 
+                      className="w-full flex items-center gap-2 p-3 hover:bg-gray-50 rounded-lg transition text-left text-sm font-bold text-gray-700"
+                      onClick={() => {
+                        track('share', { method: 'threads', content_type: 'chara_result', item_id: result.typeIdString });
+                        const url = "https://www.threads.net/intent/post?text=" + encodeURIComponent(shareTextFor(result));
+                        window.open(url, '_blank');
+                        setShowShareMenu(false);
+                      }}
+                    >
+                      <Share2 size={16} className="text-gray-700" /> Threadsに投稿
+                    </button>
+                    <button 
                       className="w-full flex items-center gap-2 p-3 hover:bg-gray-50 rounded-lg transition text-left text-sm font-bold text-gray-700 border-t border-gray-100"
                       onClick={() => {
-                        const text = `私の進路キャラは【${result.name}】でした！\n"${result.catchphrase}"\nおすすめ学部: ${result.faculty}\n#キャリキャラ #進路とかムリゲー診断`;
-                        navigator.clipboard.writeText(text).then(() => alert("コピーしました！"));
+                        track('share', { method: 'copy', content_type: 'chara_result', item_id: result.typeIdString });
+                        navigator.clipboard.writeText(shareTextFor(result)).then(() => alert("コピーしました！"));
                         setShowShareMenu(false);
                       }}
                     >
@@ -1163,6 +1184,7 @@ const App = () => {
             setHoveredStar(0);
         } else {
             setGameState('calculating');
+            track('diagnosis_complete', { content_type: 'chara' });
             setTimeout(() => setGameState('result'), 2500);
         }
     }, 400); 
@@ -1322,7 +1344,7 @@ const App = () => {
         <div className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[60%] bg-gradient-to-tl from-blue-300/40 to-indigo-300/40 rounded-full blur-[100px] animate-pulse-slow pointer-events-none mix-blend-multiply animation-delay-2000"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none"></div>
         <div className="relative z-10 h-full overflow-hidden">
-          {gameState === 'start' && <StartScreen onStart={() => setGameState('quiz')} onExplain={() => setGameState('axis_explanation')} onShowList={() => setGameState('character_list')} />}
+          {gameState === 'start' && <StartScreen onStart={() => { track('diagnosis_start', { content_type: 'chara' }); setGameState('quiz'); }} onExplain={() => setGameState('axis_explanation')} onShowList={() => setGameState('character_list')} />}
           {gameState === 'axis_explanation' && <AxisExplanationScreen onBack={() => setGameState('start')} />}
           {gameState === 'character_list' && <CharacterListScreen onBack={() => setGameState('start')} />}
           {gameState === 'quiz' && <QuizScreen question={questions[currentQuestionIndex]} index={currentQuestionIndex} progress={((currentQuestionIndex) / questions.length) * 100} onAnswer={handleAnswer} hoveredStar={hoveredStar} setHoveredStar={setHoveredStar} />}
